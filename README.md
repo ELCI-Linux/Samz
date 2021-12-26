@@ -21,6 +21,7 @@ To launch Samz, simply enter the command below into your terminal:
 
 
 You will then be prompted to select the software you want to install.
+![Screenshot from 2021-12-26 10-53-23](https://user-images.githubusercontent.com/88078492/147407174-6b341754-8557-4ed5-b88b-9ecb93774779.png)
 
 
  
