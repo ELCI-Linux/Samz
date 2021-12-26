@@ -20,9 +20,7 @@ To launch Samz, simply enter the command below into your terminal:
 
 
 
-You will then be promptedhe list of supported programs?
-22
- to selec the software you want to install.
+You will then be prompted to select the software you want to install.
 
 
  
@@ -30,13 +28,14 @@ For software with multiple installation methods, you will be prompted with a rad
 ![Screenshot from 2021-12-26 10-45-11](https://user-images.githubusercontent.com/88078492/147405827-f2d96d02-b8e6-4e33-9847-3ddf1ec0fb3d.png)
 
 
+When the selected software has been installed, you will get a prompt.
+-![Screenshot from 2021-12-26 10-53-45](https://user-images.githubusercontent.com/88078492/147406891-8d51e4b8-5dc5-4a94-a4ce-0e7476433770.png)
+ 
+
 Are there any applications that you would like to see included in Samz? Fork this project and submit a pull request to add your favourite GUI'd finance applications to the list of supported programs?
 
 **Messages for the Community**
-
--
-
-  ARCH USERS (We Need You!):
+ARCH USERS (We Need You!):
   We understand that the arch community is huge and massively important part of the modern Linux community, and we would like to include Arch support for           future versions of Samz. 
 
 Samz is currently being developed and maintained by a single individual, however we are open to credited collaboration with any other Linux users within the space. 
