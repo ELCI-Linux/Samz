@@ -1,24 +1,37 @@
 #! /bin/bash/
-
-
+				#Build detection
+				lsb=$(lsb_release -r | cut -f2)
+				if [ $lsb = '21.04' ]; then
+				tag='hirsuite' & TAG='HIRSUITE'
+				elif [ $lsb = '20.04' ]; then
+				tag='focal' & TAG='FOCAL'
+				elif [ $lsb = '18.04' ]; then
+				tag='bionic' & TAG='BIONIC'
+				elif [ $lsb = '16.04' ]; then
+				tag='xenial' & TAG='XENIAL'
+				fi
 
 helper='Samz'
-versnum='2.0'
+versnum='2.1'
 
-samz=$(zenity --list --checklist --title="Samz" --text="Select the Finance software you would like to install:" \
-	--height=255 --width=250 \
-	--column="Selected" --column="Software" \
-	"" "ARK Desktop Wallet" \
-	"" "Binance Desktop Application" \
-	"" "BitCoin Core" \
-	"" "PeerCoin" \
-	"" "Storj Node" \
-	"" "TastyWorks" \
-	"" "Wasabi")
+samz=$(zenity --list --checklist --title="Samz" \
+	 --text="Select the Finance software you would like to install:" \
+	--height=355 --width=650 \
+	--column="Selected" --column="Software" --column="Description" \
+	"" "ARK Desktop Wallet" "Buy, delegate and store ARK from your desktop" \
+	"" "Atomic Wallet" "Privacy centric BTC and ERC-20 exchange and wallet" \
+	"" "Binance Desktop Application" "Trade Crypto on the Binance Smart Chain" \
+	"" "BitCoin Core" "Connect To BitCoin P2P Network" \
+	"" "PeerCoin" "Wallet for PeerCoin" \
+	"" "Storj Node" "Operate a Storj Node" \
+	"" "TastyWorks" "Forex Trading Platform" \
+	"" "XMRig" "CPU/GPU Mining" \
+	"" "Wasabi" "Privacy Centric BTC wallet with support for hardware wallets")
 
-	ARK=$(echo $samz | grep -c "ARK" ); BTC=$(echo $samz | grep -c "BitCoin" ) ; NANCE=$(echo $samz | grep -c "Binance" )
+	ARK=$(echo $samz | grep -c "ARK" ); ATOMIC=$(echo $samz | grep -c "Atomic")
+	 BTC=$(echo $samz | grep -c "BitCoin" ); NANCE=$(echo $samz | grep -c "Binance" )
 	PEERCOIN=$(echo $samz | grep -c "PeerCoin" ); STORJNODE=$(echo $samz |grep -c "Storj Node") TASTY=$(echo $samz | grep -c "TastyWorks" );  WASABI=$(echo $samz | grep -c "Wasabi" )
-
+	XMRIG=$(echo $samz | grep -c "XMRig")
 #ARK WALLET
 		if [ $ARK -gt '0' ]; then
 		ARKI=$(zenity --list --radiolist --title="$helper $versnum: ARK Desktop Wallet" \
@@ -52,6 +65,55 @@ samz=$(zenity --list --checklist --title="Samz" --text="Select the Finance softw
 			fi
 		fi
 
+	if [ $ATOMIC -gt '0' ]; then
+
+	zenity --info --title="$helper $versnum: Atomic Installation" \
+	--text="Atomic wallet is available for Debian, Fedora and Ubuntu. If you are using Ubuntu and find the .appimage is not working or unstable, use the Debian (.deb) instead. Coversely Debian users should try the .appimage when running into issues" \
+	--height=160 --width=260
+	atom=$(zenity --list --radiolist \
+	--title="$helper $versnum: Installing Atomic Wallet" \
+	--text="Please select the version of Atomic Wallet you wish to install." \
+	--height=200 --width=200 \
+	--column="Selected" --column="Version" --column="Installer Format" \
+	""	"Debian" ".deb" \
+	""	"Fedora/RedHat" ".rpm" \
+	""	"Ubuntu" ".appimage")
+
+	debi=$(echo $atom | grep -c "Debian")
+	dora=$(echo $atom | grep -c "Fedora")
+	ubun=$(echo $atom | grep -c "Ubuntu")
+
+
+	if [ $debi -gt '0' ]; then
+	wget https://get.atomicwallet.io/download/atomicwallet-2.35.0-176.deb
+	sudo dpkg -i atomicwallet-2.35.0-176.deb
+	rm atomicwallet-2.35.0-176.deb && \
+	zenity --info --title="$helper $vernum" \
+	--text="Atomic Wallet (for $atom) was installed" || \
+	zenity --info --title="$helper $versnum" \
+	--heigt=250 --width=250 \
+	--text="Atomic Wallet (for $atom) could not be installed, please check you are using the correct method for your distribution and try again. Hint: Most Ubuntu users can also use the Debian version and vice-versa."
+	elif [ $dora -gt '0' ]; then
+	wget https://get.atomicwallet.io/download/atomicwallet-2.35.0-176.rpm
+	sudo rpm -i atomicwallet-2.35.0-176.rpm
+	rm atomicwallet-2.35.0-176.rpm && \
+	zenity --info --title="$helper $vernum" \
+	--text="Atomic Wallet (for $atom) was installed" || \
+	zenity --info --title="$helper $versnum" \
+	--heigt=250 --width=250 \
+	--text="Atomic Wallet (for $atom) could not be installed, please check you are using the correct method for your distribution and try again."
+	elif [ $ubun -gt '0' ]; then
+	wget https://get.atomicwallet.io/download/atomicwallet-2.35.0-176.AppImage
+	chmod +x atomicwallet-2.35.0-176.AppImage
+	./atomicwallet-2.35.0-176.AppImage && \
+	zenity --info --title="$helper $vernum" \
+	--text="Atomic Wallet (for $atom) was installed" || \
+	zenity --info --title="$helper $versnum" \
+	--heigt=250 --width=250 \
+	--text="Atomic Wallet (for $atom) could not be installed, please check you are using the correct method for your distribution and try again. Hint: Most Ubuntu users can also use the Debian version and vice-versa."
+	fi
+
+	fi
 #BINANCE DESKTOP
 		if [ $NANCE -gt '0' ]; then
 		METHOD=$(zenity --list --radiolist  --title="$helper $versnum" \
@@ -196,7 +258,13 @@ samz=$(zenity --list --checklist --title="Samz" --text="Select the Finance softw
 
 		if [ $debi -gt '0' ]; then
 		wget -o https://download.tastyworks.com/desktop-1.x.x/1.19.5/tastyworks-1.19.5-1_amd64.deb ./tastyworks-1.19.5-1_amd64.deb
-		sudo dpkg -i tastyworks-1.19.5-1_amd64.deb
+		sudo dpkg -i tastyworks-1.19.5-1_amd64.deb && \
+		zenity --info --title="$helper $versnum: TastyWorks" \
+		--height=150 --width=200
+		--text="TastyWork has been installed from a .deb package" || \
+		zenity --info --title="$helper $versnum: TastyWorks" \
+		--width=250
+		--text="An error occured while installing TastyWorks using the .deb file"
 		rm tastyworks-1.19.5-1_amd64.deb
 		elif [ $red -gt '0' ]; then
 		wget https://download.tastyworks.com/desktop-1.x.x/1.19.5/tastyworks-1.19.5-1.x86_64.rpm
@@ -247,7 +315,85 @@ samz=$(zenity --list --checklist --title="Samz" --text="Select the Finance softw
 			fi
 	fi
 
+			if [ $XMRIG -gt '0' ]; then
+			#latrel retrieves the name of the latest version from the xmrig website
+			latrel=$(lynx -dump -nolist https://xmrig.com/download | grep -i "latest xmrig version is" | cut -c 28-33)
+			xmrig=$(zenity  --list --radiolist \
+			--text="Select your distribution type" \
+			--column="Selected" --column="Type" \
+					""	"General Linux" \
+					""	"Ubuntu")
 
-zenity --info --title="$helper $versnum" \
+			linux=$(echo $xmrig | grep -c "General Linux")
+			ubuntu=$(echo $xmrig | grep -c "Ubuntu")
+
+				if [ $linux -gt '0' ]; then
+					if [ $generic -gt '0' ]; then
+					wget https://github.com/xmrig/xmrig/releases/download/v$latrel/xmrig-$latrel-linux-x64.tar.gz
+					tar -xfz xmrig-$latrel-linux-x64.tar.gz
+					# cd
+					elif [ $static -gt '0' ]; then
+					wget https://github.com/xmrig/xmrig/releases/download/v6.16.2/xmrig-6.16.2-linux-static-x64.tar.gz
+					tar -xfz xmrig-6.16.2-linux-static-x64.tar.gz
+					# cd
+					fi
+				elif [ $ubuntu -gt '0' ]; then
+					buntu=$(zenity --list --radiolist \
+					--title="$helper $versnum" \
+					--text="Select your installation method for XMRig" \
+					--column="Selected" --column="Method" \
+					"" "Build from source" \
+					"" "Advanced build" \
+					"" "Build from Github (Recommended)" )
+
+					advanced=$( echo $buntu | grep -c "Advanced")
+					build=$(echo $buntu | grep -c "Build")
+					gitbuild=$(echo $buntu | grep -c "Git")
+						if [ $build -gt '0' ]; then
+						sudo apt-get install git build-essential cmake libuv1-dev libssl-dev libhwloc-dev
+						git clone https://github.com/xmrig/xmrig.git
+						mkdir xmrig/build && cd xmrig/build
+						cmake ..
+						make -j$(nproc)
+				
+							cuda=$(zenity --question --title="$helper $versnum" \
+								--height=200 --width=300 \
+								--text="CUDA plugin build is optional and only required if you like to use NVIDIA GPUs. Would you like to install CUDA plug-in?")
+							if [ $? -eq '0' ]; then
+							git clone https://github.com/xmrig/xmrig-cuda.git
+							mkdir xmrig-cuda/build && cd xmrig-cuda/build
+							cmake .. -DCUDA_LIB=/usr/local/cuda/lib64/stubs/libcuda.so -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda
+							make -j$(nproc)
+							fi
+						elif [ $advanced -gt '0' ]; then
+						sudo apt-get install git build-essential cmake automake libtool autoconf
+						git clone https://github.com/xmrig/xmrig.git
+						mkdir xmrig/build && cd xmrig/scripts
+						./build_deps.sh && cd ../build
+						cmake .. -DXMRIG_DEPS=scripts/deps
+						make -j$(nproc)
+
+							cuda=$(zenity --question --title="$helper $versnum" \
+							--text="CUDA plugin build is optional and only required if you like to use NVIDIA GPUs. Would you like to install CUDA plug-in?" \
+							--height=200 --width=300 )
+							if [ $? -eq '0' ]; then
+							git clone https://github.com/xmrig/xmrig-cuda.git
+							mkdir xmrig-cuda/build && cd xmrig-cuda/build
+							cmake .. -DCUDA_LIB=/usr/local/cuda/lib64/stubs/libcuda.so -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda
+							make -j$(nproc)
+							fi
+					
+						elif [ $gitbuild -gt '0' ]; then
+						git clone https://github.com/xmrig/xmrig.git
+						mkdir xmrig/build && cd xmrig/scripts
+						./build_deps.sh && cd ../build
+						cmake .. -DXMRIG_DEPS=scripts/deps
+						make -j$(nproc)
+						fi
+					fi
+			fi
+		
+#End sequence
+	zenity --info --title="$helper $versnum" \
 	--height=150 --width=250 \
 	--text="$helper $versnum is developed and distributed by The ELCI Group Ltd under a GPL V3. To support the publisher please donate BAT via https://elci.uk or https://github.com/ELCI-Linux"
