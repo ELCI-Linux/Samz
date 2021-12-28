@@ -10,7 +10,7 @@ Finance Applications included in Samz:
 - Storj Node [Build from source]
 - TastyWorks {Fiat} [.deb (for 64-bit Debian/Ubuntu, .rpm (for RedHat)]
 Wasabi Wallet [apt (for Debian/Ubuntu), using dotnet]
-
+- XMRig [.tar.gz - standard linux + ubuntu versions]
 Dependencies:
 apt, curl, dotnet, flatpak, tar, zenity 
 
