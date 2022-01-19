@@ -3,14 +3,10 @@ Samz is a simple bash script that allows users to install a range of finance app
 Designed primarily for Debian based systems (with some Red Hat support), Samz takes the hassle out of installing finance applications using bash-script automation. Users simply choose the software they would like and the method of installing the software and Samz does the rest.
 
 Finance Applications included in Samz:
-- ARK Desktop Wallet [.deb (for 64-bit),.tar.gz (for 32-bit), Flatpak]
-- Binance Desktop Client [.deb (64-bit), .rpm (for RedHat)]
-- BitCoin Core [apt (for Debian/Ubuntu), Flatpak]
-- PeerCoin [apt, Flatpak, .tar.gz (for 32-bit)]
-- Storj Node [Build from source]
-- TastyWorks {Fiat} [.deb (for 64-bit Debian/Ubuntu, .rpm (for RedHat)]
-Wasabi Wallet [apt (for Debian/Ubuntu), using dotnet]
-- XMRig [.tar.gz - standard linux + ubuntu versions]
+
+![SamzList](https://user-images.githubusercontent.com/88078492/150136640-668bebc8-38f9-4961-9912-0626e0cecd65.png)
+
+
 Dependencies:
 apt, curl, dotnet, flatpak, tar, zenity 
 
@@ -21,7 +17,7 @@ To launch Samz, simply enter the command below into your terminal:
 
 
 You will then be prompted to select the software you want to install.
-![Screenshot from 2021-12-26 10-53-23](https://user-images.githubusercontent.com/88078492/147407174-6b341754-8557-4ed5-b88b-9ecb93774779.png)
+![Samz](https://user-images.githubusercontent.com/88078492/150132771-5a0babac-e43e-47ae-a01c-6736b5b0dc17.png)
 
 
  
