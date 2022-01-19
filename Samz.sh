@@ -12,37 +12,43 @@
 				fi
 
 helper='Samz'
-versnum='2.1'
+versnum='2.2'
 
 samz=$(zenity --list --checklist --title="Samz" \
-	 --text="Select the Finance software you would like to install:" \
+	--text="Select the Finance software you would like to install:" \
 	--height=355 --width=650 \
 	--column="Selected" --column="Software" --column="Description" \
-	"" "ARK Desktop Wallet" "Buy, delegate and store ARK from your desktop" \
-	"" "Atomic Wallet" "Privacy centric BTC and ERC-20 exchange and wallet" \
-	"" "Binance Desktop Application" "Trade Crypto on the Binance Smart Chain" \
-	"" "BitCoin Core" "Connect To BitCoin P2P Network" \
-	"" "PeerCoin" "Wallet for PeerCoin" \
-	"" "Storj Node" "Operate a Storj Node" \
-	"" "TastyWorks" "Forex Trading Platform" \
-	"" "XMRig" "CPU/GPU Mining" \
-	"" "Wasabi" "Privacy Centric BTC wallet with support for hardware wallets")
-
+	"" "ARK Desktop Wallet"			"Buy, delegate and store ARK from your desktop" \
+	"" "Atomic Wallet" 			"Privacy centric BTC and ERC-20 exchange and wallet" \
+	"" "Audius Desktop Client"		"Share and listen music on the blockchain" \
+	"" "Binance Desktop Application" 	"Trade Crypto on the Binance Smart Chain" \
+	"" "BitCoin Core" 			"Connect To BitCoin P2P Network" \
+	"" "PeerCoin" 				"Wallet for PeerCoin" \
+	"" "LBRY"				"Monetise your video content on the blockchain" \
+	"" "Lotus"				"Interact and operate on the Fileoin Network" \
+	"" "Storj Node" 			"Operate a Storj Node" \
+	"" "TastyWorks" 			"Forex Trading Platform" \
+	"" "XMRig" 				"CPU/GPU Mining" \
+	"" "Wasabi" 				"Privacy Centric BTC wallet with support for hardware wallets")
+	AUDIUS=$(echo $samz | grep -c "Audius")
 	ARK=$(echo $samz | grep -c "ARK" ); ATOMIC=$(echo $samz | grep -c "Atomic")
-	 BTC=$(echo $samz | grep -c "BitCoin" ); NANCE=$(echo $samz | grep -c "Binance" )
-	PEERCOIN=$(echo $samz | grep -c "PeerCoin" ); STORJNODE=$(echo $samz |grep -c "Storj Node") TASTY=$(echo $samz | grep -c "TastyWorks" );  WASABI=$(echo $samz | grep -c "Wasabi" )
-	XMRIG=$(echo $samz | grep -c "XMRig")
+	BTC=$(echo $samz | grep -c "BitCoin" )
+	LBRY=$(echo $samz | grep -c "LBRY"); LOTUS=$(echo $samz | grep -c "Lotus")
+	NANCE=$(echo $samz | grep -c "Binance" )
+	PEERCOIN=$(echo $samz | grep -c "PeerCoin" ); STORJNODE=$(echo $samz |grep -c "Storj Node")
+	TASTY=$(echo $samz | grep -c "TastyWorks" );  WASABI=$(echo $samz | grep -c "Wasabi" )
+				XMRIG=$(echo $samz | grep -c "XMRig")
 #ARK WALLET
 		if [ $ARK -gt '0' ]; then
-		ARKI=$(zenity --list --radiolist --title="$helper $versnum: ARK Desktop Wallet" \
+		ark=$(zenity --list --radiolist --title="$helper $versnum: ARK Desktop Wallet" \
 		--text="Select your installation method:" \
 		--column="Selected" --column="Method" \
 		"" ".deb (64-bit)" \
 		"" ".tar.gz (32-bit)" \
 		"" "Flatpak")
-			deb=$(echo $ARKI | grep -c ".deb")
-			flat=$(echo $ARKI | grep -c "Flatpak")
-			targz=$(echo $ARKI | grep -c ".tar.gz")
+			deb=$(echo $ark | grep -c ".deb")
+			flat=$(echo $ark | grep -c "Flatpak")
+			targz=$(echo $ark | grep -c ".tar.gz")
 
 			if [ $deb -gt '0' ]; then
 			wget https://github.com/ArkEcosystem/desktop-wallet/releases/download/2.9.5/ark-desktop-wallet-linux-amd64-2.9.5.deb
@@ -84,36 +90,42 @@ samz=$(zenity --list --checklist --title="Samz" \
 	ubun=$(echo $atom | grep -c "Ubuntu")
 
 
-	if [ $debi -gt '0' ]; then
-	wget https://get.atomicwallet.io/download/atomicwallet-2.35.0-176.deb
-	sudo dpkg -i atomicwallet-2.35.0-176.deb
-	rm atomicwallet-2.35.0-176.deb && \
-	zenity --info --title="$helper $vernum" \
-	--text="Atomic Wallet (for $atom) was installed" || \
-	zenity --info --title="$helper $versnum" \
-	--heigt=250 --width=250 \
-	--text="Atomic Wallet (for $atom) could not be installed, please check you are using the correct method for your distribution and try again. Hint: Most Ubuntu users can also use the Debian version and vice-versa."
-	elif [ $dora -gt '0' ]; then
-	wget https://get.atomicwallet.io/download/atomicwallet-2.35.0-176.rpm
-	sudo rpm -i atomicwallet-2.35.0-176.rpm
-	rm atomicwallet-2.35.0-176.rpm && \
-	zenity --info --title="$helper $vernum" \
-	--text="Atomic Wallet (for $atom) was installed" || \
-	zenity --info --title="$helper $versnum" \
-	--heigt=250 --width=250 \
-	--text="Atomic Wallet (for $atom) could not be installed, please check you are using the correct method for your distribution and try again."
-	elif [ $ubun -gt '0' ]; then
-	wget https://get.atomicwallet.io/download/atomicwallet-2.35.0-176.AppImage
-	chmod +x atomicwallet-2.35.0-176.AppImage
-	./atomicwallet-2.35.0-176.AppImage && \
-	zenity --info --title="$helper $vernum" \
-	--text="Atomic Wallet (for $atom) was installed" || \
-	zenity --info --title="$helper $versnum" \
-	--heigt=250 --width=250 \
-	--text="Atomic Wallet (for $atom) could not be installed, please check you are using the correct method for your distribution and try again. Hint: Most Ubuntu users can also use the Debian version and vice-versa."
-	fi
+			if [ $debi -gt '0' ]; then
+			wget https://get.atomicwallet.io/download/atomicwallet-2.35.0-176.deb
+			sudo dpkg -i atomicwallet-2.35.0-176.deb
+			rm atomicwallet-2.35.0-176.deb && \
+			zenity --info --title="$helper $vernum" \
+			--text="Atomic Wallet (for $atom) was installed" || \
+			zenity --info --title="$helper $versnum" \
+			--heigt=250 --width=250 \
+			--text="Atomic Wallet (for $atom) could not be installed, please check you are using the correct method for your distribution and try again. Hint: Most Ubuntu users can also use the Debian version and vice-versa."
+			elif [ $dora -gt '0' ]; then
+			wget https://get.atomicwallet.io/download/atomicwallet-2.35.0-176.rpm
+			sudo rpm -i atomicwallet-2.35.0-176.rpm
+			rm atomicwallet-2.35.0-176.rpm && \
+			zenity --info --title="$helper $vernum" \
+			--text="Atomic Wallet (for $atom) was installed" || \
+			zenity --info --title="$helper $versnum" \
+			--heigt=250 --width=250 \
+			--text="Atomic Wallet (for $atom) could not be installed, please check you are using the correct method for your distribution and try again."
+			elif [ $ubun -gt '0' ]; then
+			wget https://get.atomicwallet.io/download/atomicwallet-2.35.0-176.AppImage
+			chmod +x atomicwallet-2.35.0-176.AppImage
+			./atomicwallet-2.35.0-176.AppImage && \
+			zenity --info --title="$helper $vernum" \
+			--text="Atomic Wallet (for $atom) was installed" || \
+			zenity --info --title="$helper $versnum" \
+			--heigt=250 --width=250 \
+			--text="Atomic Wallet (for $atom) could not be installed, please check you are using the correct method for your distribution and try again. Hint: Most Ubuntu users can also use the Debian version and vice-versa."
+			fi
 
-	fi
+		fi
+
+#Audius
+		if [ $AUDIUS -gt '0' ]; then
+		wget "https://download.audius.co/Audius%200.16.6.AppImage" -O ./Audius.AppImage
+		./Audius.AppImage
+		fi
 #BINANCE DESKTOP
 		if [ $NANCE -gt '0' ]; then
 		METHOD=$(zenity --list --radiolist  --title="$helper $versnum" \
@@ -165,7 +177,141 @@ samz=$(zenity --list --checklist --title="Samz" \
         	flatpak --$choice install flathub org.bitcoincore.bitcoin-qt -y
 		fi
 		fi
+#LBRY
+		if [ $LBRY -gt '0' ]; then
+		lbry=$(zenity --list --radiolist \
+		--title="$helper $versnum: LBRY Desktop Client" \
+		--text="Please select the installation method for LBRY" \
+		--column="Selected" --column="Format" --column="Platforms" \
+			""	".deb" "Debian/Ubuntu" \
+			""	".AppImage" "Other GNU Linux")
+			debi=$(echo $lbry | grep -c ".deb")
+			image=$(echo $lbry | grep -c ".AppImage")
+			if [ $debi -gt '0' ]; then
+			wget https://github.com/lbryio/lbry-desktop/releases/download/v0.51.2/LBRY_0.51.2.deb
+			pkexec dpkg -i LBRY_0.51.2.deb
+			rm LBRY_0.51.2.deb
+			elif [ $image -gt '0' ]; then
+			wget https://github.com/lbryio/lbry-desktop/releases/download/v0.51.2/LBRY_0.51.2.AppImage
+			chmod +x LBRY_0.51.2.AppImage
+			pkexec ./LBRY_0.51.2.AppImage
+			rm ./LBRY_0.51.2.AppImage
+			fi
+		fi
+#Lotus
 
+		if [ $LOTUS -gt '0' ]; then
+		lotus=$(zenity --list --radiolist \
+		--title="$helper $versnum: Lotus" \
+		--height=300 --width=350 \
+		--text="Please select a installation method for Lotus" \
+		--column="Selected" --column="Method" \
+				""	"AppImage" \
+				""	"Build from source (Guided)" \
+				""	"Snap" )
+
+		app=$(echo $lotus | grep -c "AppImage")
+		build=$(echo $lotus | grep -c "Build")
+		snap=$(echo $lotus | grep -c "Snap")
+
+		if [ $app -gt '0' ]; then
+		wget https://github.com/filecoin-project/lotus/releases/download/v1.13.0/Lotus-v1.13.0-x86_64.AppImage
+		chmod +x Lotus-v1.13.0-x86_64.AppImage
+		./Lotus-v1.13.0-x86_64.AppImage
+		rm Lotus-v1.13.0-x86_64.AppImage
+
+		elif [ $build -gt '0' ]; then
+		git clone https://github.com/filecoin-project/lotus.git
+		cd lotus
+
+		distro=$(zenity --list --radiolist \
+		--title="$helper $versnum: Distro?" \
+		--text="Please select your current distro" \
+		--column="Selected" --column="Distro" \
+				""	"Arch" \
+				""	"Amazon Linux 2"
+				""	"Debian/Ubuntu" \
+				""	"Fedora" \
+				""	"openSUSE" )
+		arch=$(echo $distro | grep -c "Arch")
+		zontwo=$(echo $distro | grep -c "Amazon")
+		deb=$(echo $distro | grep -c "Debian/Ubuntu")
+		fed=$(echo $distro | grep -c "Fedora")
+		osuse=$(echo $distro | grep -c "openSUSE")
+
+				if [ $arch -gt '0' ]; then
+				sudo pacman -Syu opencl-icd-loader gcc git bzr jq pkg-config opencl-icd-loader opencl-headers opencl-nvidia hwloc
+				elif [ $deb -gt '0' ]; then
+				sudo apt install mesa-opencl-icd ocl-icd-opencl-dev gcc git bzr jq pkg-config curl clang build-essential hwloc libhwloc-dev wget -y && sudo apt upgrade -y
+				elif [ $fed -gt '0' ]; then
+				sudo dnf -y install gcc make git bzr jq pkgconfig mesa-libOpenCL mesa-libOpenCL-devel opencl-headers ocl-icd ocl-icd-devel clang llvm wget hwloc hwloc-devel
+				elif [ $osuse -gt '0' ]; then
+				sudo zypper in gcc git jq make libOpenCL1 opencl-headers ocl-icd-devel clang llvm hwloc && sudo ln -s /usr/lib64/libOpenCL.so.1 /usr/lib64/libOpenCL.so	
+				elif [ $zontwo -gt '0' ]; then
+				sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm; sudo yum install -y git gcc bzr jq pkgconfig clang llvm mesa-libGL-devel opencl-headers ocl-icd ocl-icd-devel hwloc-devel
+				fi
+			zenity --question \
+			--title="$helper $versnum: Lotus Build Dependencies" \
+			--text="Lotus requires rustup, would you like to install rustup?"
+				if [ $? -eq '0' ]; then
+				curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+				fi
+			zenity --question \
+			--title="$helper $versnum: Lotus Build Dependency - Go"
+			--text="Go is required to build Lotus, would you like to install go?"
+				if [ $? -eq '0' ]; then
+				wget -c https://golang.org/dl/go1.16.4.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local
+				fi
+			echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc && source ~/.bashrc
+			zenity --question --title="$helper $versnum: Building Lotus" \	
+			--text="For this installation, are you changing networks from a previous Lotus installation OR installing after a network reset?"
+				if [ $? -eq '0' ]; then
+				lotus daemon stop
+				lotus-storage-miner stop
+				rm -r ~/.lotus
+				fi
+			zenity --question --title="$helper $versnum: Building Lotus" \
+			--text="Will this instance be operated from within China?"
+			if [ $? -eq '0' ]; then
+			first='export IPFS_GATEWAY=https://proof-parameters.s3.cn-south-1.jdcloud-oss.com/ipfs/'
+			second='export GOPROXY=https://goproxy.cn'
+			sudo echo $first >> ~/.bashrc
+			sudo echo $second >> ~/.bashrc
+			fi
+		lotnet=$(zenity --list --radiolist \
+		--title="$helper $versnum: Building Lotus" \
+		--text="Which network would you like to connect to?" \
+		--column="Selected"	--column="Network" 	--column="Description" \
+			""	"Mainnet" "General Filecoin Network" \
+			""	"Calibnet" "For testing and development")
+
+		mainnet=$(echo $lotnet | grep -c "Mainnet")
+		if [ $mainnet -gt '0' ]; then
+		make clean all
+		elif [ $calibnet -gt '0' ]; then
+		make clean calibnet
+		fi
+		pkexec make install && \
+		zenity --info --title="$helper $versnum: Lotus Built" \
+		--text="Lotus should now be installed"
+		elif [ $snap -gt '0' ]; then
+		SBUILD=$(zenity --list --radiolist \
+		--title="$helper $versnum: Lotus via Snap" \
+		--text="Please select the type of build to install" \
+		--column="Selected" --column="Build" \
+				""	"Stable" \
+				""	"Nightly")
+			stable=$(echo $SBUILD | grep -c "Stable")
+			nightly=$(echo $SBUILD | grep -c "Nightly")
+			if [ $stable -gt '0' ]; then
+			pkexec snap install lotus-filecoin
+			elif [ $nightly -gt '0' ]; then
+			pkexec snap install lotus-filecoin --edge
+			fi
+		zenity --info --title="$helper $versnum: Lotus Built" \
+		--text="Lotus ($SBUILD) should now be installed"
+		fi
+	fi
 #PEERCOIN
 		if [ $PEERCOIN -gt '0' ]; then
 		peer=(zenity --list --radiolist \
@@ -205,8 +351,6 @@ samz=$(zenity --list --checklist --title="Samz" \
                 	sudo ./peercoin-qt
 			fi
 		fi
-
-
 #STORJNODE
 
 	if [ $STORJNODE -gt '0' ]; then
@@ -278,9 +422,11 @@ samz=$(zenity --list --checklist --title="Samz" \
 	was=$(zenity --list --radiolist \
 	 --title="Wasabi" --text="How would you like to install PeerCoin?" \
 	--column="Selection" --column="Install method" \
-			""	"apt"
-			""	"build from source"
+			""	"apt" \
+			""	"build from source" \
 			""	"flatpak")
+
+
 		apt=$(echo $was | grep -c "apt")
 		build=$(echo $was | grep -c "build")
 
@@ -355,7 +501,7 @@ samz=$(zenity --list --checklist --title="Samz" \
 						mkdir xmrig/build && cd xmrig/build
 						cmake ..
 						make -j$(nproc)
-				
+
 							cuda=$(zenity --question --title="$helper $versnum" \
 								--height=200 --width=300 \
 								--text="CUDA plugin build is optional and only required if you like to use NVIDIA GPUs. Would you like to install CUDA plug-in?")
@@ -382,7 +528,7 @@ samz=$(zenity --list --checklist --title="Samz" \
 							cmake .. -DCUDA_LIB=/usr/local/cuda/lib64/stubs/libcuda.so -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda
 							make -j$(nproc)
 							fi
-					
+
 						elif [ $gitbuild -gt '0' ]; then
 						git clone https://github.com/xmrig/xmrig.git
 						mkdir xmrig/build && cd xmrig/scripts
@@ -392,8 +538,7 @@ samz=$(zenity --list --checklist --title="Samz" \
 						fi
 					fi
 			fi
-		
 #End sequence
 	zenity --info --title="$helper $versnum" \
 	--height=150 --width=250 \
-	--text="$helper $versnum is developed and distributed by The ELCI Group Ltd under a GPL V3. To support the publisher please donate BAT via https://elci.uk or https://github.com/ELCI-Linux"
+	--text="$helper $versnum is/was developed and distributed by The ELCI Group Ltd under a GPL V3. To support the publisher please donate BAT via https://elci.uk or https://github.com/ELCI-Linux"
