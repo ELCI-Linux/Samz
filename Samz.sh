@@ -25,7 +25,8 @@ samz=$(zenity --list --checklist --title="Samz" \
 	"" "BitCoin Core" 			"Connect To BitCoin P2P Network" \
 	"" "PeerCoin" 				"Wallet for PeerCoin" \
 	"" "LBRY"				"Monetise your video content on the blockchain" \
-	"" "Lotus"				"Interact and operate on the Fileoin Network" \
+	"" "Lotus"				"Interact and operate on the FileCoin Network" \
+	"" "Mysterium Node"			"Operate a mysterium node from this device" \
 	"" "Storj Node" 			"Operate a Storj Node" \
 	"" "TastyWorks" 			"Forex Trading Platform" \
 	"" "XMRig" 				"CPU/GPU Mining" \
@@ -34,7 +35,7 @@ samz=$(zenity --list --checklist --title="Samz" \
 	ARK=$(echo $samz | grep -c "ARK" ); ATOMIC=$(echo $samz | grep -c "Atomic")
 	BTC=$(echo $samz | grep -c "BitCoin" )
 	LBRY=$(echo $samz | grep -c "LBRY"); LOTUS=$(echo $samz | grep -c "Lotus")
-	NANCE=$(echo $samz | grep -c "Binance" )
+	MYSTERIUM=$(echo $samz | grep -c "Mysterium"); NANCE=$(echo $samz | grep -c "Binance" )
 	PEERCOIN=$(echo $samz | grep -c "PeerCoin" ); STORJNODE=$(echo $samz |grep -c "Storj Node")
 	TASTY=$(echo $samz | grep -c "TastyWorks" );  WASABI=$(echo $samz | grep -c "Wasabi" )
 				XMRIG=$(echo $samz | grep -c "XMRig")
@@ -312,6 +313,34 @@ samz=$(zenity --list --checklist --title="Samz" \
 		--text="Lotus ($SBUILD) should now be installed"
 		fi
 	fi
+#Mysterium Node
+
+		if [ $MYSTERIUM -gt "0" ]; then
+		sudo add-apt-repository ppa:mysteriumnetwork/node && \
+		sudo apt-get update && \
+		zenity --notification --text="Please enter your password to complete installation" && \
+		sleep 3s && \
+		pkexec apt install myst -y && \
+		zenity --notification --text="Myst was installed succesfully" || \
+		zenity --notification --text="An error occured during installation"
+
+		yad --question --title="$helper $versnum" \
+		--window-icon="Myst.jpg" \
+		--text="Would you like to test your node?"
+
+			if [ $? -eq "0" ]; then
+			sudo systemctl status mysterium-node.service
+			fi
+
+
+		zenity --question --title="$helper $versnum" \
+		--window-icon="Myst.jpg" \
+		--text="Some users may experience network issues immediately after installation, it is recommended that you restart to avoid these issues. Would like to restart?"
+			if [ $? -eq "0" ]; then
+			finale="reboot"
+			fi
+		fi
+
 #PEERCOIN
 		if [ $PEERCOIN -gt '0' ]; then
 		peer=(zenity --list --radiolist \
@@ -542,3 +571,8 @@ samz=$(zenity --list --checklist --title="Samz" \
 	zenity --info --title="$helper $versnum" \
 	--height=150 --width=250 \
 	--text="$helper $versnum is/was developed and distributed by The ELCI Group Ltd under a GPL V3. To support the publisher please donate BAT via https://elci.uk or https://github.com/ELCI-Linux"
+
+
+	$finale
+
+	exit
