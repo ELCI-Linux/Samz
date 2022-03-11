@@ -11,10 +11,11 @@
 				tag='xenial' & TAG='XENIAL'
 				fi
 
-helper='Samz'
-versnum='2.2'
+	helper='Samz'
+	versnum='2.4'
 
-samz=$(zenity --list --checklist --title="Samz" \
+
+	samz=$(yad --list --checklist --title="Samz" \
 	--text="Select the Finance software you would like to install:" \
 	--height=355 --width=650 \
 	--column="Selected" --column="Software" --column="Description" \
@@ -23,22 +24,26 @@ samz=$(zenity --list --checklist --title="Samz" \
 	"" "Audius Desktop Client"		"Share and listen music on the blockchain" \
 	"" "Binance Desktop Application" 	"Trade Crypto on the Binance Smart Chain" \
 	"" "BitCoin Core" 			"Connect To BitCoin P2P Network" \
+	"" "DigiByte Full Node"			"Operate a DigiByte Full Node from this system" \
 	"" "PeerCoin" 				"Wallet for PeerCoin" \
+	"" "Presearch Node"			"Operate a Presearch node from this system" \
 	"" "LBRY"				"Monetise your video content on the blockchain" \
 	"" "Lotus"				"Interact and operate on the FileCoin Network" \
-	"" "Mysterium Node"			"Operate a mysterium node from this device" \
+	"" "Mysterium Node"			"Operate a mysterium node from this system" \
 	"" "Storj Node" 			"Operate a Storj Node" \
 	"" "TastyWorks" 			"Forex Trading Platform" \
 	"" "XMRig" 				"CPU/GPU Mining" \
 	"" "Wasabi" 				"Privacy Centric BTC wallet with support for hardware wallets")
+	#Results
 	AUDIUS=$(echo $samz | grep -c "Audius")
 	ARK=$(echo $samz | grep -c "ARK" ); ATOMIC=$(echo $samz | grep -c "Atomic")
-	BTC=$(echo $samz | grep -c "BitCoin" )
+	BTC=$(echo $samz | grep -c "BitCoin" ) ; DIGI=$(echo $samz | grep -c "DigiByte")
 	LBRY=$(echo $samz | grep -c "LBRY"); LOTUS=$(echo $samz | grep -c "Lotus")
-	MYSTERIUM=$(echo $samz | grep -c "Mysterium"); NANCE=$(echo $samz | grep -c "Binance" )
-	PEERCOIN=$(echo $samz | grep -c "PeerCoin" ); STORJNODE=$(echo $samz |grep -c "Storj Node")
+	MYSTERIUM=$(echo $samz | grep -c "Mysterium"); NANCE=$(echo $samz | grep -c "Binance")
+	PEERCOIN=$(echo $samz | grep -c "PeerCoin" ); PRESEARCH=$(echo $samz | grep -c "Presearch")
+	STORJNODE=$(echo $samz |grep -c "Storj Node")
 	TASTY=$(echo $samz | grep -c "TastyWorks" );  WASABI=$(echo $samz | grep -c "Wasabi" )
-				XMRIG=$(echo $samz | grep -c "XMRig")
+	XMRIG=$(echo $samz | grep -c "XMRig")
 #ARK WALLET
 		if [ $ARK -gt '0' ]; then
 		ark=$(zenity --list --radiolist --title="$helper $versnum: ARK Desktop Wallet" \
@@ -163,20 +168,61 @@ samz=$(zenity --list --checklist --title="Samz" \
 		apt=$(echo $BCC | grep -c "apt")
 		flat=$(echo $BCC | grep -c "Flatpak")
 
-		if [ $apt -gt '0' ]; then
-		sudo apt-add-repository ppa:bitcoin/bitcoin
-		sudo apt-get update
-		sudo apt-get install bitcoin-qt
-		elif [ $flat -gt '0' ]; then
-		choice=$(zenity --list --radiolist \
-		--title="$helper $versnum" \
-		--height=150 --width=200 \
-		--text="Select access for BitCoin Core flatpak installation" \
-		--column="Selected" --column="Access" --column="Description" \
-				""		"user"		"Only grants the current user to edit, run or uninstall" \
-				""		"system"	"Grants all users access" )
-        	flatpak --$choice install flathub org.bitcoincore.bitcoin-qt -y
+			if [ $apt -gt '0' ]; then
+			sudo apt-add-repository ppa:bitcoin/bitcoin
+			sudo apt-get update
+			sudo apt-get install bitcoin-qt
+			elif [ $flat -gt '0' ]; then
+			choice=$(zenity --list --radiolist \
+			--title="$helper $versnum" \
+			--height=150 --width=200 \
+			--text="Select access for BitCoin Core flatpak installation" \
+			--column="Selected" --column="Access" --column="Description" \
+					""		"user"		"Only grants the current user to edit, run or uninstall" \
+					""		"system"	"Grants all users access" )
+	        	flatpak --$choice install flathub org.bitcoincore.bitcoin-qt -y
+			fi
 		fi
+#DigiByte
+
+		if [ $DIGI -gt "0" ]; then
+		#Creating New User
+		sudo useradd -G sudo digibyte -m -s /bin/bash
+		sudo echo "digibyte ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/no-sudo-password-for-digibyte
+		#Creating Directory
+		sudo mkdir -p /etc/digibyte /var/lib/digibyte
+		#Copying config file for DigiByte
+		sudo cp digibyte.conf /etc/digibyte
+		#Download Software
+			#Previous Download Check
+			check=$(ls | grep -c "digibyte-7.17.2-x86-64-linux-gnu.tar.gz")
+			if [ $check -lt "1" ]; then
+			wget https://github.com/DigiByte-Core/digibyte/releases/download/v7.17.2/digibyte-7.17.2-x86_64-linux-gnu.tar.gz
+			tar -xf digibyte-7.17.2-x86_64-linux-gnu.tar.gz
+			sudo mv digibyte-7.17.2 /usr/local/digibyte-7.17.2
+			rm digibyte-7.17.2-x86-64-linux-gun-tar.gz
+			elif [ $check -eq "1" ]; then
+			tar -xf digibyte-7.17.2-x86_64-linux-gnu.tar.gz
+			sudo mv digibyte-7.17.2 /usr/local/digibyte-7.17.2
+			rm digibyte-7.17.2-x86-64-linux-gun-tar.gz
+			fi
+		#Linking symbolic link version to digibyte
+		sudo ln -s /usr/local/digibyte-7.17.2 /usr/local/digibyte
+		# Creating Systemd unit file
+			zenity --notification --text="Creating Systemd unit file"
+			sudo cp digibyted.service /etc/systemd/system/digibyted.service || \
+			zenity --notification --text="An error occured whist making the systemd unit file"
+		#Changing Ownership
+		sudo chown -R digibyte:digibyte /etc/digibyte /var/lib/digibyte
+		# Enabling and starting service
+		sudo systemctl enable digibyted.service
+		sudo systemctl start digibyted.service
+		# Wallet address
+		zenity --question --title="$helper $versnum" \
+			--text="Would you like to see your wallet address?"
+			if [ $? -eq "0" ]; then
+			curl -XPOST -H 'Content-Type: application/json' -u "jsonrpc:$PASSWORD" http://localhost:14022 -d '{"jsonrpc": "1.0", "id": "curl", "method": "getaccountaddress", "params": []}' {"result":"D7ZznMe4NyEkXd6zA6MB3GYXiAURo64hNs","error":null,"id":"curl"}
+			fi
 		fi
 #LBRY
 		if [ $LBRY -gt '0' ]; then
@@ -380,6 +426,69 @@ samz=$(zenity --list --checklist --title="Samz" \
                 	sudo ./peercoin-qt
 			fi
 		fi
+#Presearch
+		if [ $PRESEARCH -gt '0' ]; then
+			zenity --notification --text="Creating a presearch node"
+			#installing docker
+			sudo apt-get update
+ 			sudo apt-get install ca-certificates curl gnupg lsb-release -y
+			curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+			echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+			sudo apt-get update
+			sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+		# Registration code
+			zenity --question \
+			--title="$helper $versnum" \
+			--text="Do you have an existing presearch node account and registration code?"
+			if [ $? -eq "0" ]; then
+			REGCODE=$(zenity --entry --title="$helper $versnum" \
+			--text="Please paste your presearch node registration code into the textbox")
+			elif [ $? -eq "1" ]; then
+				zenity --question \
+				--title="$helper $versnum" \
+				--text="Do you have an existing presearch node account?"
+						if [ $? -eq "0" ]; then
+						zenity --notificiation \
+						--text="You will now be navigated to the presearch node sign-up page"
+						xdg-open #login-url
+						elif [ $? -eq "1" ]; then
+						zenity --notification \
+						--text="You will be navigated to the presearch registration page" && \
+						sleep 1s && \
+						zenity --notification \
+						--text="Once you have registered and acquired a code copy it and close the browser window"
+						xdg-open #registration url
+						fi
+			REGCODE=$(zenity --entry --title="$helper $versnum" \
+			--text="Please paste your presearch node registration code into the textbox")
+			fi
+			#Running Node
+				zenity --question \
+				--title="$helper $versnum" \
+				--text="Would you like to run the node now?"
+				if [ $? -eq "0" ]; then
+				docker stop presearch-node
+				docker rm presearch-node
+				docker stop presearch-auto-updater
+				docker rm presearch-auto-updater
+				docker run -d --name presearch-auto-updater --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock presearch/auto-updater --cleanup --interval 900 presearch-auto-updater presearch-node
+				docker pull presearch/node
+				docker run -dt --name presearch-node --restart=unless-stopped -v presearch-node-storage:/app/node -e REGISTRATION_CODE=$REGCODE presearch/node
+				docker logs -f presearch-node
+				fi
+			#Alias
+			zenity --question \
+			--title="$helper $versnum" \
+			--text="Would you like to create the aliases 'preon', 'preoff', 'prestart' and 'precheck'"
+				if [ $? -eq "0" ]; then
+				echo 'alias preson="docker stop presearch-node ; docker rm presearch-node ; docker stop presearch-auto-updater ; docker rm presearch-auto-updater ; docker run -d --name presearch-auto-updater --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock presearch/auto-updater --cleanup --interval 900 presearch-auto-updater presearch-node ; docker pull presearch/node ; docker run -dt --name presearch-node --restart=unless-stopped -v presearch-node-storage:/app/node -e REGISTRATION_CODE=$YOUR_REGISTRATION_CODE_HERE presearch/node ; docker logs -f presearch-node"' >> ~/.bashrc && \
+				echo 'alias presoff="docker stop presearch-node ; docker stop presearch-auto-updater"' >> ~/.bashrc && \
+				echo 'alias prestart="docker start presearch-auto-updater ; docker start presearch-node"' >> ~/.bashrc && \
+				echo 'alias precheck="docker ps"' >> ~/.bashrc && \
+				zenity --notification --text="Aliases have been made" || \
+				zenity --notification --text="Aliases could not be made"
+				fi
+		fi
 #STORJNODE
 
 	if [ $STORJNODE -gt '0' ]; then
@@ -569,7 +678,7 @@ samz=$(zenity --list --checklist --title="Samz" \
 			fi
 #End sequence
 	zenity --info --title="$helper $versnum" \
-	--height=150 --width=250 \
+	--height=150 --width=450 \
 	--text="$helper $versnum is/was developed and distributed by The ELCI Group Ltd under a GPL V3. To support the publisher please donate BAT via https://elci.uk or https://github.com/ELCI-Linux"
 
 
