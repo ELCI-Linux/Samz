@@ -2,23 +2,26 @@
 Samz is a simple bash script that allows users to install a range of finance applications for Linux - via a Graphical User Interface. 
 Designed primarily for Debian based systems (with some Red Hat support), Samz takes the hassle out of installing finance applications using bash-script automation. Users simply choose the software they would like and the method of installing the software and Samz does the rest.
 
-Crypto Applications included in Samz:
-ArK Desktop Wallet
-Atomic Wallet
-Audius
-Binance Desktop Client
-BitCoin Core
-LBRY
-Lotus (for FileCoin Network)
-PeerCoin
-Storj-Node
-TastyWorks
-XMRig
-Wasabi Wallet
+With Samz you can:
+    Install the ArK Desktop Wallet
+    Install Atomic Wallet
+    Install the Audius client
+    Install the Audius-terminal-player
+    Install the Binance Desktop client
+    Install BitCoin Core
+    Install the LBRY Desktop Application
+    Instal Lotus (to operate a filecoin node)
+    Create a Mysterium Node
+    Install the PeerCoin client
+    Create a Presearch Node
+    Install Storj-Node
+    Install TastyWorks
+    Install XMRig
+    Install Wasabi Wallet
 
 
 Dependencies:
-apt, curl, dotnet, flatpak, tar, zenity 
+apt, curl, dotnet, flatpak, tar, yad, zenity 
 
 To launch Samz, simply enter the command below into your terminal:
     
